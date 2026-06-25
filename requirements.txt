@@ -6,8 +6,8 @@ python-dotenv==1.0.0
 # OpenCV 영상 처리
 opencv-python==4.8.0.74
 
-# MediaPipe 포즈 추정
-mediapipe==0.10.35
+# YOLOv8 포즈 추정
+ultralytics==8.0.208
 
 # 수치 계산
 numpy==1.24.3

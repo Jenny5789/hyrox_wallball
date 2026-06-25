@@ -14,13 +14,40 @@
         </header>
         
         <main>
-            <div class="video-container">
-                <img id="video-feed" src="/video_feed" alt="Live Video Feed">
-            </div>
+            <!-- 웹캠 피드 -->
+            <section class="video-section">
+                <div class="video-container">
+                    <img id="video-feed" src="/video_feed" alt="Live Video Feed">
+                </div>
+            </section>
             
-            <div class="status">
-                <p id="status-text">카메라 준비 중...</p>
-            </div>
+            <!-- 실시간 데이터 -->
+            <section class="data-section">
+                <div class="stat-card">
+                    <div class="stat-label">무릎 각도</div>
+                    <div class="stat-value" id="angle">--°</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">좌측 무릎</div>
+                    <div class="stat-value" id="left-knee">--°</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-label">우측 무릎</div>
+                    <div class="stat-value" id="right-knee">--°</div>
+                </div>
+                
+                <div class="stat-card verdict-card">
+                    <div class="stat-label">판정 결과</div>
+                    <div class="stat-value" id="depth">READY</div>
+                </div>
+            </section>
+            
+            <!-- 프레임 카운트 -->
+            <section class="info-section">
+                <p id="frame-count">프레임: 0</p>
+            </section>
         </main>
     </div>
     

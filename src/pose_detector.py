@@ -1,60 +1,64 @@
 import cv2
+from ultralytics import YOLO
 import numpy as np
-
-try:
-    # 먼저 새 API 시도
-    from mediapipe.tasks import vision
-    from mediapipe.framework.formats import landmark_pb2
-    import mediapipe as mp
-    USE_NEW_API = True
-except:
-    # 구 API 사용
-    import mediapipe as mp
-    USE_NEW_API = False
 
 class PoseDetector:
     def __init__(self):
-        """MediaPipe Pose 초기화"""
-        if USE_NEW_API:
-            self.pose = None
-        else:
-            self.pose = mp.solutions.pose.Pose()
-            self.mp_drawing = mp.solutions.drawing_utils
-            self.mp_pose = mp.solutions.pose
+        """YOLOv8 Pose 초기화"""
+        # YOLOv8 Pose 모델 로드 (자동으로 다운로드됨)
+        self.model = YOLO('yolov8m-pose.pt')
+        self.conf = 0.5  # 신뢰도 임계값
     
     def detect(self, frame):
-        """포즈 추정"""
-        # BGR을 RGB로 변환
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        """
+        프레임에서 포즈 추정
         
-        # 포즈 추정
-        results = self.pose.process(rgb_frame)
+        Args:
+            frame: OpenCV 프레임 (BGR)
+        
+        Returns:
+            frame: 포즈가 그려진 프레임
+            results: YOLOv8 결과
+        """
+        # YOLOv8으로 추정
+        results = self.model(frame, conf=self.conf)
         
         # 결과 그리기
-        if results.pose_landmarks:
-            self.mp_drawing.draw_landmarks(
-                frame,
-                results.pose_landmarks,
-                self.mp_pose.POSE_CONNECTIONS
-            )
+        annotated_frame = results[0].plot()
         
-        return frame, results
+        return annotated_frame, results
     
     def get_landmarks(self, results):
-        """관절점 추출"""
-        if results and results.pose_landmarks:
-            landmarks = []
-            for landmark in results.pose_landmarks.landmark:
-                landmarks.append({
-                    'x': landmark.x,
-                    'y': landmark.y,
-                    'z': landmark.z,
-                    'visibility': landmark.visibility
-                })
-            return landmarks
-        return None
+        """
+        포즈 랜드마크(관절점) 추출
+        
+        Returns:
+            landmarks: 17개의 관절점 좌표 (COCO 형식)
+        """
+        landmarks = []
+        
+        if results and len(results) > 0:
+            keypoints = results[0].keypoints.data  # (1, 17, 3) 형태
+            
+            if keypoints is not None and len(keypoints) > 0:
+                for point in keypoints[0]:
+                    landmarks.append({
+                        'x': float(point[0].item()) if hasattr(point[0], 'item') else float(point[0]),
+                        'y': float(point[1].item()) if hasattr(point[1], 'item') else float(point[1]),
+                        'confidence': float(point[2].item()) if hasattr(point[2], 'item') else float(point[2])
+                    })
+        
+        return landmarks if landmarks else None
+    
+    def get_keypoint_names(self):
+        """COCO 형식의 17개 관절점 이름"""
+        return [
+            'nose', 'left_eye', 'right_eye', 'left_ear', 'right_ear',
+            'left_shoulder', 'right_shoulder', 'left_elbow', 'right_elbow',
+            'left_wrist', 'right_wrist', 'left_hip', 'right_hip',
+            'left_knee', 'right_knee', 'left_ankle', 'right_ankle'
+        ]
     
     def close(self):
         """리소스 해제"""
-        if self.pose:
-            self.pose.close()
+        pass  # YOLOv8은 특별한 정리 불필요
