@@ -22,20 +22,24 @@
         </header>
 
         <!-- 스테이션 바 -->
-        <div class="station-bar">WALL BALL &nbsp;—&nbsp; SQUAT DEPTH CHECK</div>
+        <div class="station-bar">SQUAT DEPTH CHECK</div>
 
         <main class="judge-main">
 
             <!-- 좌측: 영상 -->
             <section class="video-column">
-                <div class="video-frame">
+                <div class="video-frame" id="video-frame">
                     <img id="video-feed" src="/video_feed" alt="Live Video Feed" class="video-feed">
-                    <div class="target-line"><span>3.0M TARGET LINE</span></div>
+                    <canvas id="video-freeze-frame" class="video-feed" hidden></canvas>
                     <div class="angle-readout">
                         <span id="angle" class="angle-value">--°</span>
                         <span id="depth" class="verdict-chip">READY</span>
                     </div>
+                    <div id="guidance-banner" class="guidance-banner" hidden></div>
+                    <div id="pause-overlay" class="pause-overlay" hidden>⏸</div>
                 </div>
+
+                <p class="setup-hint">📐 정확한 측정을 위해 카메라 <strong>옆(측면)</strong>에 서주세요</p>
 
                 <div class="timeline">
                     <div class="timeline-clock" id="session-clock">00:00.0</div>
@@ -44,19 +48,19 @@
 
                 <div class="video-controls">
                     <button id="pause-btn" class="ctrl-btn">⏸ PAUSE STREAM</button>
-                    <button id="capture-clip-btn" class="ctrl-btn" disabled>CAPTURE CLIP</button>
-                    <button id="var-replay-btn" class="ctrl-btn" disabled>VAR INSTANT PLAYBACK</button>
+                    <button id="keypoints-btn" class="ctrl-btn">POSE: OFF</button>
                 </div>
+                <p class="control-hint">POSE: 영상 위에 관절/스켈레톤 표시를 켜고 끕니다</p>
 
                 <div class="athlete-bar">
-                    <span>ATHLETE: <strong>GUEST</strong></span>
+                    <span>ATHLETE: <input type="text" id="athlete-name-input" value="GUEST" maxlength="20"></span>
                     <span>SYSTEM ID: ASC-26-001</span>
                 </div>
             </section>
 
             <!-- 우측: 텔레메트리 -->
             <aside class="telemetry-column">
-                <h2 class="telemetry-title">TELEMETRY &amp; VAR CONTROL TOWER</h2>
+                <h2 class="telemetry-title">TELEMETRY &amp; CONTROL TOWER</h2>
 
                 <div class="panel valid-reps-panel">
                     <div class="panel-label">VALID REPS</div>
@@ -64,7 +68,10 @@
                         <div class="valid-reps-number" id="rep-count">0</div>
                         <div class="valid-reps-percent" id="rep-percent">0%</div>
                     </div>
-                    <div class="valid-reps-goal">GOAL: <span id="rep-goal">100</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="rep-progress-fill"></div></div>
+                    <div class="valid-reps-goal">
+                        GOAL: <input type="number" id="rep-goal-input" value="20" min="1" step="1">
+                    </div>
                 </div>
 
                 <div class="panel depth-panel">
@@ -83,32 +90,25 @@
                     </div>
                 </div>
 
-                <div class="panel var-log-panel">
-                    <div class="panel-label">VAR (VIDEO ASSISTANT REFEREE) LOG</div>
-                    <ul class="var-log" id="var-log">
-                        <li class="var-log-empty">NO-REP 발생 시 여기에 기록됩니다</li>
-                    </ul>
-                </div>
-
                 <div class="ref-override">
-                    <button id="no-rep-btn" class="ref-btn ref-btn-red">🚫 REF. OVERRIDE: NO-REP</button>
+                    <button id="no-rep-btn" class="ref-btn ref-btn-red">🚫 REF. OVERRIDE<br>NO-REP</button>
                     <button id="reset-btn" class="ref-btn ref-btn-yellow">🔄 RESET COUNTER</button>
                 </div>
 
                 <div class="debug-strip">
-                    <span>신뢰도: <span id="confidence">--</span></span>
-                    <span>프레임: <span id="frame-count">0</span></span>
-                    <span>상태: <span id="status">연결 중...</span></span>
-                    <span id="counter-state" hidden></span>
+                    <span>CONF: <span id="confidence">--</span></span>
+                    <span>FRAME: <span id="frame-count">0</span></span>
+                    <span>LINK: <span id="status">CONNECTING...</span></span>
+                    <span>STATE: <span id="counter-state">-</span></span>
                 </div>
             </aside>
         </main>
     </div>
 
-    <!-- UNBROKEN 축하 배너 (목표 횟수 달성 시 2초간 표시) -->
+    <!-- 목표 횟수 달성 축하 배너 (2초간 표시) -->
     <div id="unbroken-banner" class="unbroken-banner" hidden>
-        <div class="unbroken-text">UNBROKEN!</div>
-        <div class="unbroken-sub" id="unbroken-sub">100 reps, no misses 🎉</div>
+        <div class="unbroken-text">미션 클리어!</div>
+        <div class="unbroken-sub" id="unbroken-sub"></div>
     </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
