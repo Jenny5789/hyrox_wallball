@@ -12,8 +12,8 @@
 ## 📋 Project Overview
 
 ### Goal
-포트폴리오 프로젝트로서 **작동 가능한 실시간 스쿼트 깊이 판별 시스템**을 구축.
-웹캠을 통해 사용자의 스쿼트 자세를 분석하고, 깊이를 실시간으로 피드백하며, 반복 횟수를 자동으로 카운팅.
+포트폴리오 프로젝트로서 **작동 가능한 실시간 스쿼트 깊이 판별 시스템**을 구축.<br>
+웹캠을 통해 사용자의 스쿼트 깊이를 실시간으로 피드백하며, 반복 횟수를 자동으로 카운팅.
 
 ### Tech Stack
 - **Python:** 3.10 (필수)
@@ -42,11 +42,11 @@
 
 | Task ID | Task Name | Status | Assignee | Notes |
 |---------|-----------|--------|----------|-------|
-| 1.1 | 프로젝트 구조 설정 (src/, tests/, docs/) | ✅ | EJ | 완료 |
-| 1.2 | 테스트 비디오 수집 (스쿼트 데이터셋) | ⏳ | EJ | **이월됨** |
-| 1.3 | YOLOv8 포즈 모델 통합 (`pose_detector.py`) | ✅ | EJ | 완료 |
-| 1.4 | 초기 테스트 코드 작성 (TDD) | ✅ | EJ | 진행 중 |
-| 1.5 | GitHub 저장소 초기화 & .gitignore 설정 | ✅ | EJ | 완료 |
+| 1.1 | 프로젝트 구조 설정 (src/, tests/, docs/) | ✅ | 
+| 1.2 | 테스트 비디오 수집 (스쿼트 데이터셋) | ⏳ |
+| 1.3 | YOLOv8 포즈 모델 통합 (`pose_detector.py`) | ✅ |
+| 1.4 | 초기 테스트 코드 작성 (TDD) | ✅ | 
+| 1.5 | GitHub 저장소 초기화 & .gitignore 설정 | ✅ | 
 
 #### Deliverables
 - ✅ `src/pose_detector.py` (17 keypoint 추출)
@@ -65,13 +65,13 @@
 
 | Task ID | Task Name | Status | Assignee | Notes |
 |---------|-----------|--------|----------|-------|
-| 2.1 | Flask 앱 구축 + Motion JPEG 스트리밍 | ✅ | EJ | 완료 |
-| 2.2 | REST API 엔드포인트 구현 (/api/data) | ✅ | EJ | 완료 |
-| 2.3 | 스쿼트 깊이 분석 엔진 (벡터 기하학) | ✅ | EJ | 완료 |
-| 2.4 | 깊이 분류 시스템 (DEEP/NORMAL/SHALLOW) | ✅ | EJ | 완료 |
-| 2.5 | 반응형 웹 UI (HTML/CSS/JS) | ✅ | EJ | 완료 |
-| 2.6 | 실시간 포즈 키포인트 시각화 | ✅ | EJ | 완료 |
-| 2.7 | Sprint 2 보고서 작성 | ✅ | EJ | 완료 |
+| 2.1 | Flask 앱 구축 + Motion JPEG 스트리밍 | ✅ | 
+| 2.2 | REST API 엔드포인트 구현 (/api/data) | ✅ |
+| 2.3 | 스쿼트 깊이 분석 엔진 (벡터 기하학) | ✅ |
+| 2.4 | 깊이 분류 시스템 (DEEP/NORMAL/SHALLOW) | ✅ | 
+| 2.5 | 반응형 웹 UI (HTML/CSS/JS) | ✅ | 
+| 2.6 | 실시간 포즈 키포인트 시각화 | ✅ | 
+| 2.7 | Sprint 2 보고서 작성 | ✅ | 
 
 #### Deliverables
 - ✅ `app.py` (Flask 애플리케이션)
