@@ -51,7 +51,7 @@ ENV/
 
 # 결과 파일
 data/results/
-data/hyrox_data.db
+data/squat_data.db
 
 # 모델 파일 (YOLOv8 - 크기가 큼)
 *.pt

@@ -1,31 +1,35 @@
 import cv2
+import torch
 from ultralytics import YOLO
 import numpy as np
 
 class PoseDetector:
     def __init__(self):
         """YOLOv8 Pose 초기화"""
+        # GPU가 있으면 사용 (CPU 전용 torch 빌드였다가 CUDA 빌드로 교체 후 크게 빨라짐)
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
         # YOLOv8 Pose 모델 로드 (자동으로 다운로드됨)
         self.model = YOLO('yolov8m-pose.pt')
         self.conf = 0.5  # 신뢰도 임계값
-    
+
     def detect(self, frame):
         """
         프레임에서 포즈 추정
-        
+
         Args:
             frame: OpenCV 프레임 (BGR)
-        
+
         Returns:
             frame: 포즈가 그려진 프레임
             results: YOLOv8 결과
         """
-        # YOLOv8으로 추정
-        results = self.model(frame, conf=self.conf)
-        
+        # YOLOv8으로 추정 (verbose=False: 매 프레임 콘솔 로그 출력을 막아 오버헤드 감소)
+        results = self.model(frame, conf=self.conf, device=self.device, verbose=False)
+
         # 결과 그리기
         annotated_frame = results[0].plot()
-        
+
         return annotated_frame, results
     
     def get_landmarks(self, results):

@@ -1,10 +1,10 @@
-# HYROX Squat Depth Judge
+# Angle-Based Squat Counter
 ## Master Scrum Project Plan
 
 **Project:** Real-time Squat Depth Analysis System using Webcam  
 **Duration:** ~2 months (4 Sprints)  
 **Methodology:** Scrum + TDD + Kanban Hybrid  
-**Repository:** https://github.com/Jenny5789/hyrox_wallball (Private)  
+**Repository:** https://github.com/Jenny5789/angle-based-squat-counter (Private)  
 **Deployment Target:** Hugging Face Spaces  
 
 ---
@@ -183,7 +183,7 @@ Week 7-8  │ Sprint 4: Deployment      │ ⏳ (예정)
 ## 📁 Project Structure
 
 ```
-hyrox/
+ANGLE-BASED-SQUAT-COUNTER/
 ├── venv/                      # Python 3.10 가상환경
 ├── src/
 │   ├── pose_detector.py       # YOLOv8 포즈 감지
@@ -202,7 +202,7 @@ hyrox/
 ├── requirements.txt           # Python 의존성
 ├── README.md                  # 프로젝트 설명 (초안 완료)
 └── docs/
-    ├── HYROX_SCRUM_PROJECT_PLAN.md    # 이 파일
+    ├── SCRUM_PROJECT_PLAN.md          # 이 파일
     ├── SPRINT_1_REPORT.md             # (작성 필요)
     └── SPRINT_2_REPORT.md             # ✅ 완료
 ```
@@ -214,7 +214,7 @@ hyrox/
 ### Environment Setup
 ```bash
 # 프로젝트 폴더로 이동
-cd C:\Users\AISW_203_103\Desktop\hyrox
+cd D:\JEN\VISION_AI\ANGLE-BASED-SQUAT-COUNTER
 
 # Python 3.10 venv 생성
 py -3.10 -m venv venv

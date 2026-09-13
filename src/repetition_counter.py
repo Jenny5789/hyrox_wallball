@@ -63,12 +63,12 @@ class RepetitionCounter:
         self.rep_count = 0
         self.current_state = RepCounterState.IDLE
         self.previous_angle = None
-        
+
         # 임계값
         self.threshold_deep = threshold_deep
         self.threshold_recovery = threshold_recovery
         self.min_frames_in_state = min_frames_in_state
-        
+
         # 상태 지속 카운트 (노이즈 방지)
         self.frames_in_state = 0
     
@@ -121,29 +121,29 @@ class RepetitionCounter:
         if self.current_state == RepCounterState.IDLE:
             if angle_decreasing and squat_state == "DEEP":
                 self._transition_to_state(RepCounterState.DESCENDING)
-        
+
         elif self.current_state == RepCounterState.DESCENDING:
             if squat_state == "DEEP":
                 self._transition_to_state(RepCounterState.DEEP)
-        
+
         elif self.current_state == RepCounterState.DEEP:
             if angle_increasing:
                 self._transition_to_state(RepCounterState.ASCENDING)
-        
+
         elif self.current_state == RepCounterState.ASCENDING:
             # 회복 완료: 각도가 recovery threshold를 초과
             if knee_angle > self.threshold_recovery:
                 self._transition_to_state(RepCounterState.COMPLETE)
-        
+
         elif self.current_state == RepCounterState.COMPLETE:
             # 반복 완료 후 IDLE로 리셋
             self.rep_count += 1
             self._transition_to_state(RepCounterState.IDLE)
-    
+
     def _transition_to_state(self, new_state: RepCounterState) -> None:
         """
-        새로운 상태로 전이
-        
+        새로운 상태로 전이 (확정됨)
+
         Args:
             new_state (RepCounterState): 전이할 새 상태
         """

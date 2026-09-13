@@ -3,54 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HYROX Squat Depth Judge</title>
+    <title>Angle-Based Squat Counter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🏋️ HYROX Squat Depth Judge</h1>
-            <p>AI로 스쿼트 깊이를 자동 판정합니다</p>
+    <div class="judge-app">
+
+        <!-- 상단 바 -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="brand">A B S C</span>
+                <span class="brand-sub">ANGLE-BASED SQUAT COUNTER</span>
+            </div>
+            <div class="topbar-right">
+                <span class="badge badge-rec"><span class="dot dot-rec"></span> REC</span>
+                <span class="badge badge-ai"><span class="dot dot-ai"></span> AI POSE: <span id="ai-lock-status">LOCKED</span></span>
+            </div>
         </header>
-        
-        <main>
-            <!-- 웹캠 피드 -->
-            <section class="video-section">
-                <div class="video-container">
-                    <img id="video-feed" src="/video_feed" alt="Live Video Feed">
+
+        <!-- 스테이션 바 -->
+        <div class="station-bar">WALL BALL &nbsp;—&nbsp; SQUAT DEPTH CHECK</div>
+
+        <main class="judge-main">
+
+            <!-- 좌측: 영상 -->
+            <section class="video-column">
+                <div class="video-frame">
+                    <img id="video-feed" src="/video_feed" alt="Live Video Feed" class="video-feed">
+                    <div class="target-line"><span>3.0M TARGET LINE</span></div>
+                    <div class="angle-readout">
+                        <span id="angle" class="angle-value">--°</span>
+                        <span id="depth" class="verdict-chip">READY</span>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-clock" id="session-clock">00:00.0</div>
+                    <div class="timeline-track" id="timeline-track"></div>
+                </div>
+
+                <div class="video-controls">
+                    <button id="pause-btn" class="ctrl-btn">⏸ PAUSE STREAM</button>
+                    <button id="capture-clip-btn" class="ctrl-btn" disabled>CAPTURE CLIP</button>
+                    <button id="var-replay-btn" class="ctrl-btn" disabled>VAR INSTANT PLAYBACK</button>
+                </div>
+
+                <div class="athlete-bar">
+                    <span>ATHLETE: <strong>GUEST</strong></span>
+                    <span>SYSTEM ID: ASC-26-001</span>
                 </div>
             </section>
-            
-            <!-- 실시간 데이터 -->
-            <section class="data-section">
-                <div class="stat-card">
-                    <div class="stat-label">무릎 각도</div>
-                    <div class="stat-value" id="angle">--°</div>
+
+            <!-- 우측: 텔레메트리 -->
+            <aside class="telemetry-column">
+                <h2 class="telemetry-title">TELEMETRY &amp; VAR CONTROL TOWER</h2>
+
+                <div class="panel valid-reps-panel">
+                    <div class="panel-label">VALID REPS</div>
+                    <div class="valid-reps-row">
+                        <div class="valid-reps-number" id="rep-count">0</div>
+                        <div class="valid-reps-percent" id="rep-percent">0%</div>
+                    </div>
+                    <div class="valid-reps-goal">GOAL: <span id="rep-goal">100</span></div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-label">좌측 무릎</div>
-                    <div class="stat-value" id="left-knee">--°</div>
+
+                <div class="panel depth-panel">
+                    <div class="panel-label">SQUAT DEPTH ANALYSIS</div>
+                    <div class="depth-stats">
+                        <div class="depth-stat">
+                            <span class="stat-label">MIN KNEE ANGLE</span>
+                            <span class="stat-value" id="min-angle">--°</span>
+                            <span class="stat-note">LOWEST POINT</span>
+                        </div>
+                        <div class="depth-stat">
+                            <span class="stat-label">MAX ANGLE</span>
+                            <span class="stat-value" id="max-angle">--°</span>
+                            <span class="stat-note">PREVIOUS NO-REP</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="stat-card">
-                    <div class="stat-label">우측 무릎</div>
-                    <div class="stat-value" id="right-knee">--°</div>
+
+                <div class="panel var-log-panel">
+                    <div class="panel-label">VAR (VIDEO ASSISTANT REFEREE) LOG</div>
+                    <ul class="var-log" id="var-log">
+                        <li class="var-log-empty">NO-REP 발생 시 여기에 기록됩니다</li>
+                    </ul>
                 </div>
-                
-                <div class="stat-card verdict-card">
-                    <div class="stat-label">판정 결과</div>
-                    <div class="stat-value" id="depth">READY</div>
+
+                <div class="ref-override">
+                    <button id="no-rep-btn" class="ref-btn ref-btn-red">🚫 REF. OVERRIDE: NO-REP</button>
+                    <button id="reset-btn" class="ref-btn ref-btn-yellow">🔄 RESET COUNTER</button>
                 </div>
-            </section>
-            
-            <!-- 프레임 카운트 -->
-            <section class="info-section">
-                <p id="frame-count">프레임: 0</p>
-            </section>
+
+                <div class="debug-strip">
+                    <span>신뢰도: <span id="confidence">--</span></span>
+                    <span>프레임: <span id="frame-count">0</span></span>
+                    <span>상태: <span id="status">연결 중...</span></span>
+                    <span id="counter-state" hidden></span>
+                </div>
+            </aside>
         </main>
     </div>
-    
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <!-- UNBROKEN 축하 배너 (목표 횟수 달성 시 2초간 표시) -->
+    <div id="unbroken-banner" class="unbroken-banner" hidden>
+        <div class="unbroken-text">UNBROKEN!</div>
+        <div class="unbroken-sub" id="unbroken-sub">100 reps, no misses 🎉</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
