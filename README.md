@@ -1,4 +1,4 @@
-# 🏋️ HYROX Squat Depth Judge
+# 🏋️ Angle-Based Squat Counter
 
 **AI 기반 실시간 스쿼트 깊이 판정 및 반복 횟수 자동 카운팅 시스템**
 
@@ -24,7 +24,7 @@
 
 ## 🎯 개요
 
-**HYROX Squat Depth Judge**는 웹캠을 통해 사용자의 스쿼트 자세를 실시간으로 분석하고, 
+**Angle-Based Squat Counter**는 웹캠을 통해 사용자의 스쿼트 자세를 실시간으로 분석하고, 
 깊이를 자동으로 판정하며, 반복 횟수를 카운팅하는 AI 기반 포트폴리오 프로젝트입니다.
 
 ### 목표
@@ -92,8 +92,8 @@ SHALLOW: ≥ 110°  ⚠️  얕은 스쿼트
 
 #### 1️⃣ 저장소 복제
 ```bash
-git clone https://github.com/Jenny5789/hyrox_wallball.git
-cd hyrox
+git clone https://github.com/Jenny5789/angle-based-squat-counter.git
+cd angle-based-squat-counter
 ```
 
 #### 2️⃣ 가상환경 생성 (Python 3.10)
@@ -165,7 +165,7 @@ GET /api/status
 
 응답:
 {
-    "status": "HYROX System Running",
+    "status": "ABSC System Running",
     "message": "Pose detection and squat analysis active"
 }
 ```
@@ -175,7 +175,7 @@ GET /api/status
 ## 📁 프로젝트 구조
 
 ```
-hyrox/
+ANGLE-BASED-SQUAT-COUNTER/
 ├── src/                          # 소스 코드
 │   ├── pose_detector.py          # YOLOv8 포즈 감지
 │   ├── squat_analyzer.py         # 깊이 분석
@@ -196,7 +196,7 @@ hyrox/
 │       └── script.js             # 클라이언트 로직
 │
 ├── docs/                         # 프로젝트 문서
-│   ├── HYROX_SCRUM_PROJECT_PLAN.md
+│   ├── SCRUM_PROJECT_PLAN.md
 │   └── SPRINT_2_REPORT.md
 │
 ├── data/                         # 데이터 (테스트 비디오 등)
